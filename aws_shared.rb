@@ -4,9 +4,8 @@
 # Shared data and methods for aws implementations
 
 require 'parseconfig'
+require 'aws-sdk'
 
-# This application file
-APPLICATION_NAME='add_amazon_iot_thing.rb'
 # The default prefix name of the thing
 THING_NAME_PREFIX='iot_test_thing'
 # The location of the thing database (see aws_thing_local_db)
@@ -24,6 +23,10 @@ POLICY_DEFAULT_CONTENT= <<POLICY_DEFAULT_CONTENT_END
 }
 POLICY_DEFAULT_CONTENT_END
 
+def get_thing_name(thing_sn,thing_name_prefix=THING_NAME_PREFIX)
+  "#{thing_name_prefix}_#{thing_sn}"
+end
+
 def setup_aws_region
   if ENV['AWS_REGION'] == nil
     aws_config_file=File.join(Dir.home,".aws","config")
@@ -39,4 +42,15 @@ def setup_aws_region
       puts "Please ensure you have configured AWS credentials properly and set environment variable AWS_REGION if necessary"
     end
   end
+end
+
+def get_iot
+  if Gem.win_platform?
+    # see https://github.com/aws/aws-sdk-core-ruby/issues/166
+    # Avoids certificate error on Windows platforms
+    Aws.use_bundled_cert!
+  end
+  setup_aws_region
+  iot=Aws::IoT::Client.new
+  iot
 end

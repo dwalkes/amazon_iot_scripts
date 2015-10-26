@@ -3,9 +3,10 @@
 # 2015-10-24
 # script used to add a thing to Amazon Iot
 require 'getoptlong'
-require 'aws-sdk'
 require_relative 'aws_shared'
 require_relative 'aws_thing_local_db'
+# This application file
+APPLICATION_NAME='add_amazon_iot_thing.rb'
 
 def printusage
   puts "#{APPLICATION_NAME} --thing_sn thing_unique_sn [--thing_name thing_name_prefix]"
@@ -48,16 +49,10 @@ if thing_sn == nil
   exit 1
 end
 
-thing_name="#{thing_name_prefix}_#{thing_sn}"
+thing_name=get_thing_name(thing_sn,thing_name_prefix)
 thing_db_item=AwsThingLocalDb.new(thing_name)
 
-setup_aws_region
-if Gem.win_platform?
-  # see https://github.com/aws/aws-sdk-core-ruby/issues/166
-  # Avoids certificate error on Windows platforms
-  Aws.use_bundled_cert!
-end
-iot=Aws::IoT::Client.new
+iot=get_iot
 
 if delete_thing_request
   puts "Attempting to delete thing based on passed argument"

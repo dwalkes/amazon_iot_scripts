@@ -37,6 +37,13 @@ class AwsThingLocalDb
   def remove
     FileUtils.rm_rf(get_db_dir)
   end
+
+  #@param key see definitions above
+  #@return the path to a file containing key contents
+  def get_file_path(key)
+    File.join(get_db_dir,key)
+  end
+    
   def location_description
     get_db_dir
   end
