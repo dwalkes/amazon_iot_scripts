@@ -10,6 +10,8 @@ require_relative 'aws_shared.rb'
 # keys and certs with outside (ie command line) implementations
 # In a production implementation you probably want a real database for this
 class AwsThingLocalDb
+  # The location of the thing database (see aws_thing_local_db)
+  THING_FILE_DB_ROOT='./thing_db'
   DB_KEY_THING_CERT="cert.pem"
   DB_KEY_THING_PRIVATE_KEY="thing_private_key.pem"
   DB_KEY_THING_PUBLIC_KEY="thing_public_key.pem"

@@ -7,13 +7,24 @@ require_relative 'aws_shared'
 require_relative 'aws_thing_local_db'
 # This application file
 APPLICATION_NAME='add_amazon_iot_thing.rb'
-
+THING_SERIAL_NUMBER_ATTRIBUTE='ThingSerialNumber'
+POLICY_DEFAULT_NAME="PubSubToAnyTopic"
+POLICY_DEFAULT_CONTENT= <<POLICY_DEFAULT_CONTENT_END
+{
+    "Version": "2012-10-17", 
+    "Statement": [{
+        "Effect": "Allow",
+        "Action":["iot:*"],
+        "Resource": ["*"]
+    }]
+}
+POLICY_DEFAULT_CONTENT_END
 def printusage
   puts "#{APPLICATION_NAME} --thing_sn thing_unique_sn [--thing_name thing_name_prefix]"
   puts "      Creates (or deletes) a thing in Amazon IOT and sets up thing certificates"
-  puts "      and keys in a folder at #{THING_DB_ROOT}/name_prefix_thing_sn"
+  puts "      and keys in a folder at #{AwsThingLocalDb::THING_DB_ROOT}/name_prefix_thing_sn"
   puts "        thing_unique_sn - A unique serial number assigned to this thing (string)"
-  puts "        thing_name_prefix - An optional name prefix.  #{THING_NAME_PREFIX} if not specified"
+  puts "        thing_name_prefix - An optional name prefix.  #{AwsIotShared::THING_NAME_PREFIX} if not specified"
   puts "        delete : delete the device instead of creating.  Note: This also deletes any certs"
   puts "                  and keys associated with the device and removes from the local db"
   puts "                  please use with caution"
@@ -26,7 +37,7 @@ opts = GetoptLong.new(
   [ '--delete', '-d', GetoptLong::NO_ARGUMENT]
 )
 
-thing_name_prefix=THING_NAME_PREFIX
+thing_name_prefix=AwsIotShared::THING_NAME_PREFIX
 thing_sn=nil
 delete_thing_request=false
 opts.each do |opt,arg|
@@ -49,10 +60,10 @@ if thing_sn == nil
   exit 1
 end
 
-thing_name=get_thing_name(thing_sn,thing_name_prefix)
+thing_name=AwsIotShared::get_thing_name(thing_sn,thing_name_prefix)
 thing_db_item=AwsThingLocalDb.new(thing_name)
 
-iot=get_iot
+iot=AwsIotShared::get_iot
 
 if delete_thing_request
   puts "Attempting to delete thing based on passed argument"
