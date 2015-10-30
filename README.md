@@ -36,3 +36,12 @@ This test implements the [MQTT Publish/Subscribe](https://docs.aws.amazon.com/io
 Run with no arguments for usage instructions.
 
 This test will use the database keyfiles created during the "Creating Things" step above.
+
+## Running Device Shadow Test
+Use the device_shadow_test.rb to test MQTT plsu device shadows.  Pay attention to the notes about ruby setup above
+This test implements the get, delete, and update MQTT topics as described in the [Device Shadow MQTT Publish](http://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-mqtt.html) documentation.
+
+Run with no arguments for usage instructions
+Note:  --get will time out when the device state is empty or deleted
+
+This test will use the database keyfiles created during the "Creating Things" step above.

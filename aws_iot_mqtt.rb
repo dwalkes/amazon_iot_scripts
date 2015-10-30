@@ -12,6 +12,7 @@ require_relative 'aws_thing_local_db'
 class AwsIotMqtt
   ROOTCA_PEM_FILE_PATH="rootCA.pem"
   include AppLogger
+  attr_reader :thing_name
   class AwsIotMqttException < StandardError; end
 
   # Receives a single message on a topic
@@ -42,7 +43,6 @@ class AwsIotMqtt
       @message
     end
   end
-
   def initialize(thing_name)
     @thing_name=thing_name
     @response_timeout=10
@@ -53,26 +53,34 @@ class AwsIotMqtt
     @client ||= create_mqtt_connected_client
   end
 
-  def send_message_and_verify_response(topic,message)
+  def send_message_and_return_response(topic,accepted_topic,message)
     receiver_client=create_mqtt_connected_client
-    receiver=MqttMessageReceiverThread.new(receiver_client,topic)
+    receiver=MqttMessageReceiverThread.new(receiver_client,accepted_topic)
     thread=Thread.new { receiver.run }
     get_client.publish(topic,message)
     begin
       Timeout::timeout(@response_timeout) {
         thread.join 
       }
-      if (message != receiver.get_last_message)
-        raise AwsIotMqttException.new("Expected message #{message} from server, got #{receiver.get_last_message}")
-      end
     rescue Timeout::Error
       thread.terminate
-      raise AwsIotMqttException.new("Timed out #{@response_timeout} seconds waiting for response from mqtt client on topic #{topic}")
+      raise AwsIotMqttException.new("Timed out after #{@response_timeout} seconds waiting for response from mqtt client on topic #{accepted_topic}")
     ensure 
       receiver_client.disconnect
     end
+    receiver.get_last_message
   end
 
+  def send_message_and_verify_response_on_topic(topic,accepted_topic,message)
+    if message != send_message_and_return_response(topic,accepted_topic,message)
+      raise AwsIotMqttException.new("Expected message #{message} from server, got #{receiver.get_last_message}")
+    end
+  end
+
+  def send_message_and_verify_response(topic,message)
+    # By default, use the same topic for the accepted topic
+    send_message_and_verify_response_on_topic(topic,topic,message)
+  end
   def disconnect
     get_client.disconnect
   end    
