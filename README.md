@@ -13,7 +13,7 @@ For Ubuntu this would be something like
 ```
 sudo apt-get install ruby rubygems
 ```
-For Windows systems, checkout [Ruby Installer For Windows](http://rubyinstaller.org/)
+For Windows systems, checkout [Ruby Installer For Windows](http://rubyinstaller.org/).
 **Be sure to use verson 2.0 or later for TLS 1.2 support in ruby.**  This is important for the MQTT example.  See [this link](http://stackoverflow.com/questions/11059059/is-it-possible-to-enable-tls-v1-2-in-ruby-if-so-how) for background
 
 ### Install required packages
