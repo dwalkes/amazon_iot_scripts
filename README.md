@@ -13,8 +13,8 @@ For Ubuntu this would be something like
 ```
 sudo apt-get install ruby rubygems
 ```
-For Windows systems, checkout [Ruby Installer For Windows](http://rubyinstaller.org/)
-** Be sure to use verson 2.0 or later for TLS 1.2 support in ruby.  This is important for the MQTT example.  See [this link](http://stackoverflow.com/questions/11059059/is-it-possible-to-enable-tls-v1-2-in-ruby-if-so-how) for background
+For Windows systems, checkout [Ruby Installer For Windows](http://rubyinstaller.org/).
+**Be sure to use verson 2.0 or later for TLS 1.2 support in ruby.**  This is important for the MQTT example.  See [this link](http://stackoverflow.com/questions/11059059/is-it-possible-to-enable-tls-v1-2-in-ruby-if-so-how) for background
 
 ### Install required packages
 CD to the root project directory inside a ruby command prompt.  Then to setup your ruby environment with the gems required by the application (per the Gemfile and using [bundler](http://bundler.io/) type the following commands:
@@ -42,6 +42,7 @@ Use the device_shadow_test.rb to test MQTT plus device shadows.  Pay attention t
 This test implements the get, delete, and update MQTT topics as described in the [Device Shadow MQTT Publish](http://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-mqtt.html) documentation.
 
 Run with no arguments for usage instructions
-Note:  --get will time out when the device state is empty or deleted
+
+Note:  --get will time out when the device state is empty or deleted, since the accepted MQTT endpoint is not being updated.  I haven't yet figured out how to resolve this.
 
 This test will use the database keyfiles created during the "Creating Things" step above.
