@@ -74,6 +74,7 @@ if update != nil
   STDOUT.flush
   update_hash=JSON.parse(update)
   shadow.report_state(update_hash)
+  puts "State reporting completed with success"
 end
 
 if delete
@@ -89,4 +90,5 @@ if request != nil
   puts "Requesting state #{request}"
   request_hash=JSON.parse(request)
   shadow.request_state(request_hash)
+  puts "State request completed with success"
 end

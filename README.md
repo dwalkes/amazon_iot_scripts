@@ -38,7 +38,7 @@ Run with no arguments for usage instructions.
 This test will use the database keyfiles created during the "Creating Things" step above.
 
 ## Running Device Shadow Test
-Use the device_shadow_test.rb to test MQTT plsu device shadows.  Pay attention to the notes about ruby setup above
+Use the device_shadow_test.rb to test MQTT plus device shadows.  Pay attention to the notes about ruby setup above
 This test implements the get, delete, and update MQTT topics as described in the [Device Shadow MQTT Publish](http://docs.aws.amazon.com/iot/latest/developerguide/thing-shadow-mqtt.html) documentation.
 
 Run with no arguments for usage instructions

@@ -2,7 +2,7 @@ require 'logger'
 
 module AppLogger
   @@default_logger=STDOUT
-  @@default_level=Logger::DEBUG
+  @@default_level=Logger::INFO
 
   def logger
     @logger ||= AppLogger.configure_logger_for(self)
